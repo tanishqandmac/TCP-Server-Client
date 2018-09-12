@@ -8,10 +8,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #define PORT 4444
-volatile sig_atomic_t flag = 0;
-void my_function(int sig){ // can be called asynchronously
-  flag = 1; // set flag
-}
+
 int main(){
 	int clientSocket, ret;
 	struct sockaddr_in serverAddr;
@@ -26,12 +23,11 @@ int main(){
 	ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 
 	while(1){
-		signal(SIGINT, my_function); 
 		printf("Client: \t");
 		scanf("%s", &buffer[0]);
 		send(clientSocket, buffer, strlen(buffer), 0);
 
-		if((strcmp(buffer, "exit()") == 0) || flag==1){
+		if(strcmp(buffer, "exit()") == 0){
 			close(clientSocket);
 			exit(1);
 			flag=0;
