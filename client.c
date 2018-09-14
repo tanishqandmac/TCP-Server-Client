@@ -1,41 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
-#include <unistd.h>
-#include <sys/socket.h>
 #include <sys/types.h>
+#include <signal.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#define PORT 8000
+#include <unistd.h>
+#include <sys/socket.h>
 
 int main(){
-	int clientSocket, ret;
-	struct sockaddr_in serverAddr;
-	char buffer[1024];
+	struct sockaddr_in serAddress;
+	int clientSocket, connection;
+	char message[1000];
+
+	memset(&serAddress,'\0',sizeof(serAddress));
 	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-	memset(&serverAddr, '\0', sizeof(serverAddr));
-
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(PORT);
-	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-	ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	
+	serAddress.sin_family = AF_INET;
+	serAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serAddress.sin_port = htons(8000);
+	connection = connect(clientSocket, (struct sockaddr*)&serAddress, sizeof(serAddress));
 
 	while(1){
 		printf("Client: ");
-		scanf("%s", &buffer[0]);
-		send(clientSocket, buffer, strlen(buffer), 0);
+		scanf("%s", &message[0]);
+		send(clientSocket, message, strlen(message), 0);
 
-		if(strcmp(buffer, "exit()") == 0){
+		if(strcmp(message, "exit()") == 0){
 			close(clientSocket);
 			exit(1);
 		}
-		if(recv(clientSocket, buffer, 1024, 0) < 0){
-			printf("[-]Error in receiving data.\n");
+
+		if(recv(clientSocket, message, 1024, 0) >= 0){
+			printf("%s\n", message);
+			
 		}else{
-			printf("%s\n", buffer);
-			//printf("Recieved from client %d: %s\n", buffer);
+			printf("Error in receiving data.\n");
+			//printf("Recieved from client %d: %s\n", message);
 		}
 	}
 	return 0;
