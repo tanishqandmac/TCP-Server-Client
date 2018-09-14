@@ -21,7 +21,7 @@ int main(){
 	serAddress.sin_port = htons(8000);
 	connection = connect(clientSocket, (struct sockaddr*)&serAddress, sizeof(serAddress));
 
-	while(1){
+	for(;;){
 		printf("Client: ");
 		scanf("%s", &message[0]);
 		send(clientSocket, message, strlen(message), 0);
@@ -35,7 +35,7 @@ int main(){
 			printf("%s\n", message);
 			
 		}else{
-			printf("Error in receiving data.\n");
+			printf("Error in connecting!\n");
 			//printf("Recieved from client %d: %s\n", message);
 		}
 	}
