@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
 #define PORT 4444
 
 int main(){
@@ -23,14 +24,19 @@ int main(){
 	ret = connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 
 	while(1){
-		printf("Client: \t");
+		printf("Client: ");
 		scanf("%s", &buffer[0]);
 		send(clientSocket, buffer, strlen(buffer), 0);
 
 		if(strcmp(buffer, "exit()") == 0){
 			close(clientSocket);
 			exit(1);
-			flag=0;
+		}
+		if(recv(clientSocket, buffer, 1024, 0) < 0){
+			printf("[-]Error in receiving data.\n");
+		}else{
+			printf("%s\n", buffer);
+			//printf("Recieved from client %d: %s\n", buffer);
 		}
 /*
 		if(recv(clientSocket, buffer, 1024, 0) < 0){
@@ -41,6 +47,5 @@ int main(){
 		}
 */
 	}
-
 	return 0;
 }

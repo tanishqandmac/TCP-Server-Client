@@ -10,15 +10,13 @@
 #define PORT 4444
 
 int main(){
+	int sockfd, ret ,newSocket;
+	struct sockaddr_in serverAddr;
 
-	int sockfd, ret;
-	 struct sockaddr_in serverAddr;
-
-	int newSocket;
 	struct sockaddr_in newAddr;
 
 	socklen_t addr_size;
-
+ 
 	char buffer[1024];
 	pid_t childpid;
 
@@ -38,10 +36,6 @@ int main(){
 	}
 	char buffer1[1024];
 	while(1){
-		/*
-		scanf("%s", &buffer1[0]);
-		send(sockfd, buffer1, strlen(buffer1), 0);
-		*/
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);
 		if(newSocket < 0){
 			exit(1);
@@ -58,8 +52,10 @@ int main(){
 					break;
 				}else{
 					printf("Recieved from Client %d : %s",ntohs(newAddr.sin_port), buffer);
-					send(newSocket, buffer, strlen(buffer), 0);
+					sprintf(buffer1, "Recieved from Client %d: %s",(newAddr.sin_port),buffer  );
+					send(newSocket, buffer1, strlen(buffer1), 0);
 					bzero(buffer, sizeof(buffer));
+					bzero(buffer, sizeof(buffer1));
 					printf("\n");
 				}
 			}
