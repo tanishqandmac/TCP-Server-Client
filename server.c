@@ -6,8 +6,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-#define PORT 4444
+#define PORT 8000
 
 int main(){
 	int sockfd, ret ,newSocket;
@@ -16,7 +15,7 @@ int main(){
 	struct sockaddr_in newAddr;
 
 	socklen_t addr_size;
- 
+ 	int i;
 	char buffer[1024];
 	pid_t childpid;
 
@@ -51,11 +50,11 @@ int main(){
 					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 					break;
 				}else{
-					printf("Recieved from Client %d : %s",ntohs(newAddr.sin_port), buffer);
+					printf("Recieved from Client %d : %s",ntohs(newAddr.sin_port), buffer);			
 					sprintf(buffer1, "Recieved from Client %d: %s",(newAddr.sin_port),buffer  );
 					send(newSocket, buffer1, strlen(buffer1), 0);
 					bzero(buffer, sizeof(buffer));
-					bzero(buffer, sizeof(buffer1));
+					bzero(buffer1, sizeof(buffer1));
 					printf("\n");
 				}
 			}

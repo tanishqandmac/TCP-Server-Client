@@ -7,8 +7,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-#define PORT 4444
+#define PORT 8000
 
 int main(){
 	int clientSocket, ret;
@@ -38,14 +37,6 @@ int main(){
 			printf("%s\n", buffer);
 			//printf("Recieved from client %d: %s\n", buffer);
 		}
-/*
-		if(recv(clientSocket, buffer, 1024, 0) < 0){
-			if(strcmp(buffer, "exit()") == 0){
-			close(clientSocket);
-			printf("Server has been Shut Down\n");
-			exit(1);}
-		}
-*/
 	}
 	return 0;
 }
